@@ -14,12 +14,12 @@ mobile varchar(12)
 
 drop table if exists task;
 create table task(
-task_id decimal primary key,
+task_id int auto_increment  primary key,
 task_name varchar(20),
 task_desc varchar(100),
 start_time datetime,
 end_time datetime,
-task_status decimal default(0) check(task_status = 1 or 0),
+task_status decimal default(0) check(task_status = 0 or 1),
 task_priority decimal default(1) check(task_priority = 1 or 2 or 3)
 );
 
@@ -68,14 +68,64 @@ DELIMITER ;
 
 call login_user("ashu","123");
 
+SHOW CREATE table task;
 
 
+ALTER TABLE user_tasks DROP FOREIGN KEY `fk_task`;
+
+ALTER TABLE task MODIFY  task_id decimal;
+ALTER TABLE task CHANGE task_id task_id int not null  AUTO_INCREMENT;
+Alter TABLE task ADD PRIMARY KEY (task_id);
+ALTER TABLE user_tasks add CONSTRAINT `fk_task` foreign key (task_id) REFERENCES task(task_id) ;
+ALTER TABLE task ALTER task_status SET DEFAULT 0;
+ALTER TABLE task ALTER task_priority SET DEFAULT 1;
+
+ALTER TABLE task ADD COLUMN  uname varchar(20),add foreign key (uname) REFERENCES user_info(uname);
+drop PROCEDURE `add_task`;
 DELIMITER //
 CREATE PROCEDURE `add_task` (
-in in_uname varchar(20),
-in in_password varchar(20)
+in in_task_name varchar(20),
+in in_task_desc varchar(20),
+in in_start_time datetime,
+in in_end_time datetime,
+in in_user_name varchar(20)
 )
 BEGIN
-	select * from user_info where uname = in_uname and password = in_password;
+	insert into 
+task(
+
+task_name,
+task_desc,
+start_time,
+end_time,
+uname)
+ values
+(
+in_task_name,
+in_task_desc,
+in_start_time,
+in_end_time,
+in_user_name
+);
+
+
+
 END//
 DELIMITER ;
+delete from task where task_id = 1;
+commit;
+call add_task('call pro','testing','1998-01-23 12:45:56','2010-12-31 01:15:00');
+insert into 
+task(task_name,
+task_desc,
+start_time,
+end_time,
+task_status,
+task_priority)
+ values
+("insert",
+"write insert sp"
+,'1998-01-23 12:45:56',
+'2010-12-31 01:15:00',
+1,
+1);
