@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.todoapp.todo.dto.Task;
 import com.todoapp.todo.dto.UserInfoDTO;
 import com.todoapp.todo.repository.UserRepo;
 
@@ -55,6 +56,12 @@ public class HomeController {
 		
 		return user;
 	
+	}
+	
+	@PostMapping("/addTask")
+	public void addTask(@RequestBody Task task) {
+		
+		repo.addTask(task.getTaskName(),task.getTaskDesc(),task.getStartTime(),task.getEndTime(),task.getUsername());
 	}
 
 }

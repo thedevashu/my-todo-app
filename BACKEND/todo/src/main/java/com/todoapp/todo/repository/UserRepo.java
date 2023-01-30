@@ -20,4 +20,7 @@ public interface UserRepo extends JpaRepository<UserInfoDTO, Integer> {
 	@Procedure("login_user")
 	public Optional<UserInfoDTO> loginUser(String in_uname,String in_password);
 	
+	@Procedure("add_task")
+	public void addTask(String in_task_name,String  in_task_desc,String in_start_time,String in_end_time,String in_user_name);
+	
 }
